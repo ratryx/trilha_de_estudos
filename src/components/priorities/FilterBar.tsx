@@ -9,13 +9,13 @@ interface FilterBarProps {
 export function FilterBar({ query, onQuery, area, onArea, areas }: FilterBarProps) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row">
-      <input
+      <input type="search" aria-label="Buscar assunto"
         value={query}
         onChange={(e) => onQuery(e.target.value)}
         placeholder="Buscar assunto"
         className="w-full rounded-xl border border-sand bg-paper px-4 py-2.5 text-sm text-ink outline-none focus:border-moss sm:max-w-xs"
       />
-      <select
+      <select aria-label="Filtrar por área"
         value={area}
         onChange={(e) => onArea(e.target.value)}
         className="w-full rounded-xl border border-sand bg-paper px-4 py-2.5 text-sm text-ink outline-none focus:border-moss sm:max-w-xs"

@@ -3,54 +3,22 @@ import type { StudyDay } from '../../types'
 import { areaStyle } from '../../lib/areaStyle'
 import { formatDayMonth, formatWeekday, isToday } from '../../lib/date'
 
-interface DayNodeProps {
-  day: StudyDay
-  done: boolean
-  selected: boolean
-  onSelect: () => void
-}
-
+interface DayNodeProps { day: StudyDay; done: boolean; selected: boolean; onSelect: () => void }
 export function DayNode({ day, done, selected, onSelect }: DayNodeProps) {
   const style = areaStyle(day.area)
   const today = isToday(day.date)
-
+  const placeholder = day.subject.startsWith('[A DEFINIR]')
   return (
-    <button
-      onClick={onSelect}
-      className="group flex w-24 shrink-0 flex-col items-center gap-2 rounded-2xl py-2 text-center transition-colors"
-    >
-      <span className="text-[11px] text-ink-soft">
-        {formatWeekday(day.date)} · {formatDayMonth(day.date)}
+    <motion.button onClick={onSelect} whileTap={{ scale: 0.985 }} aria-haspopup="dialog" aria-label={`${day.subject}, ${formatDayMonth(day.date)}, ${done ? 'concluído' : 'pendente'}`} className={`day-card ${done ? 'is-done' : ''} ${selected ? 'is-selected' : ''}`}>
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border" style={{ background: done ? style.dot : style.bg, color: done ? '#fff' : style.text, borderColor: style.dot }}>
+        {done ? <motion.svg initial={{ scale: 0.7 }} animate={{ scale: 1 }} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m5 12 4 4L19 6" /></motion.svg> : <span className="text-xs font-bold">{String(day.id).padStart(2, '0')}</span>}
       </span>
-      <motion.span
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
-        className="flex h-11 w-11 items-center justify-center rounded-full border-2 transition-shadow"
-        style={{
-          backgroundColor: done ? style.dot : 'var(--color-paper)',
-          borderColor: today ? 'var(--color-ochre)' : style.dot,
-          boxShadow: selected ? `0 0 0 3px ${style.bg}` : 'none',
-        }}
-      >
-        {done ? (
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              d="M3 8.5L6.2 11.5L13 4.5"
-              stroke="var(--color-paper)"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        ) : (
-          <span className="text-xs font-semibold" style={{ color: style.dot }}>
-            {day.week}
-          </span>
-        )}
-      </motion.span>
-      <span className="line-clamp-2 text-[11px] leading-tight text-ink-soft group-hover:text-ink">
-        {day.subject}
+      <span className="min-w-0 flex-1">
+        <span className="mb-1 flex flex-wrap items-center gap-2 text-xs text-ink-soft">{formatWeekday(day.date)} · {formatDayMonth(day.date)}{today && <span className="rounded-full bg-sand px-2 py-0.5 font-semibold text-moss-deep">Hoje</span>}</span>
+        <span className="block text-sm font-semibold leading-relaxed text-ink">{placeholder ? 'Assunto a definir' : day.subject}</span>
+        <span className="mt-1 block text-xs leading-relaxed text-ink-soft">{day.area}{done ? ' · Concluído' : ''}</span>
       </span>
-    </button>
+      <span className="self-center text-moss-light lg:hidden" aria-hidden="true">↗</span>
+    </motion.button>
   )
 }

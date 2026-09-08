@@ -27,7 +27,7 @@ export function UpNext({ days }: UpNextProps) {
                 <span className="w-16 shrink-0 text-xs text-ink-soft">
                   {formatWeekday(day.date)} {formatDayMonth(day.date)}
                 </span>
-                <span className="truncate text-sm text-ink">{day.subject}</span>
+                <span className="min-w-0 text-sm leading-relaxed text-ink">{day.subject}</span>
               </li>
             )
           })}

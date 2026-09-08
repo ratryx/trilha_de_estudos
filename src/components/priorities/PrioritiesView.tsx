@@ -9,6 +9,8 @@ interface PrioritiesViewProps {
   toggle: (id: number) => void
 }
 
+const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
+
 export function PrioritiesView({ isDone, toggle }: PrioritiesViewProps) {
   const [query, setQuery] = useState('')
   const [area, setArea] = useState('')
@@ -18,19 +20,20 @@ export function PrioritiesView({ isDone, toggle }: PrioritiesViewProps) {
       .slice()
       .sort((a, b) => a.id - b.id)
       .filter((d) => (area ? d.area === area : true))
-      .filter((d) => d.subject.toLowerCase().includes(query.toLowerCase()))
+      .filter((d) => normalize(d.subject).includes(normalize(query)))
   }, [query, area])
 
   return (
-    <div className="flex flex-col gap-5 px-6 py-6 sm:px-10">
+    <div className="flex flex-col gap-5 px-5 py-6 sm:px-10">
       <div>
-        <h2 className="font-display text-2xl text-moss-deep">As 56 prioridades</h2>
+        <h2 className="font-display text-2xl text-moss-deep">Seus assuntos</h2>
         <p className="mt-1 text-sm text-ink-soft">
           Os assuntos de maior relevância, na ordem em que entram no cronograma.
         </p>
       </div>
       <FilterBar query={query} onQuery={setQuery} area={area} onArea={setArea} areas={allAreas()} />
-      <div className="rounded-2xl border border-sand bg-paper px-5">
+      <p role="status" className="text-xs text-ink-soft">{filtered.length} de {scheduleData.length} assuntos</p>
+<div className="rounded-2xl border border-sand bg-paper px-4">
         {filtered.length === 0 ? (
           <p className="py-6 text-center text-sm text-ink-soft">Nenhum assunto encontrado.</p>
         ) : (

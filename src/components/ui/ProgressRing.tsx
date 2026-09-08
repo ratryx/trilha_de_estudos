@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 interface ProgressRingProps {
   value: number
@@ -7,13 +7,14 @@ interface ProgressRingProps {
 }
 
 export function ProgressRing({ value, total, size = 132 }: ProgressRingProps) {
+  const reducedMotion = useReducedMotion()
   const pct = total > 0 ? value / total : 0
   const stroke = 10
   const radius = (size - stroke) / 2
   const circumference = 2 * Math.PI * radius
 
   return (
-    <div className="relative" style={{ width: size, height: size }}>
+    <div role="progressbar" aria-label="Progresso dos estudos" aria-valuemin={0} aria-valuemax={total} aria-valuenow={value} className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
         <circle
           cx={size / 2}
@@ -34,7 +35,7 @@ export function ProgressRing({ value, total, size = 132 }: ProgressRingProps) {
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: circumference * (1 - pct) }}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          transition={{ duration: reducedMotion ? 0 : 0.6, ease: 'easeOut' }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">

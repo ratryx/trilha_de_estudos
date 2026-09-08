@@ -23,8 +23,11 @@ export function TrailView({ isDone, toggle }: TrailViewProps) {
   }, [])
 
   return (
-    <div className="px-6 py-6 sm:px-10">
-      {weeks.map(([week, days]) => (
+    <div className="px-5 py-6 sm:px-10">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div><p className="eyebrow">A JORNADA É SUA</p><h2 className="mt-2 font-display text-2xl text-moss-deep">Sua trilha, um dia de cada vez</h2><p className="mt-2 text-sm text-ink-soft">Toque em um assunto para ver os detalhes e concluir o estudo.</p></div>
+{scheduleData.some((day) => !isDone(day.id)) ? <button className="primary-button shrink-0" onClick={() => setSelected(scheduleData.find((day) => !isDone(day.id)) ?? null)}>Continuar estudo <span aria-hidden="true">↗</span></button> : <p role="status" className="text-sm font-semibold text-moss">Trilha concluída! ✓</p>}
+</div>{weeks.map(([week, days]) => (
         <WeekRow
           key={week}
           week={week}
